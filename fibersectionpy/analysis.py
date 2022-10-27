@@ -19,7 +19,7 @@ class Fiber:
         self.fail = False
 
 
-class FiberModel:
+class FiberModelDB:
     def __init__(self):
         self.fibers = {}
         self.materials = {}
