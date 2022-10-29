@@ -14,7 +14,7 @@ class ReinforcementProperties:
 
 
 class UnconfConcMat:
-    def __init__(self, kwargs):
+    def __init__(self, **kwargs):
         self.fail = False
         self.state = 'White'
         self.fpc = kwargs['fpc']
@@ -67,5 +67,17 @@ class UnconfConcMat:
             else:
                 self.state = 8
                 return 0
+
     def tension(self, ec):
         elastic = ec * self.Ec
+        if elastic > self.fcr:
+            if ec <= 0.002:
+                return 0.7 * self.fcr(1 + math.sqrt(500 * ec))
+            else:
+                return 0
+        else:
+            return elastic
+        self.state = 8
+
+
+
