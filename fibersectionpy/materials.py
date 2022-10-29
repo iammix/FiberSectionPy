@@ -80,4 +80,46 @@ class UnconfConcMat:
         self.state = 8
 
 
+class SteelBilinMaterial:
+    def __init__(self, E, fy, fsu, e_sh, e_su, P):
+        self.Es = E
+        self.fy = fy
+        self.fsu = fsu
+        self.e_y = fy / E
+        self.e_sh = e_sh
+        self.e_su = e_su
+        self.P = P
+        self.state = 'Black'
+        self.fail = False
 
+        self.plot_points = [-self.e_su, -self.e_sh, -self.e_y, 0, self.e_y, self.e_sh, self.e_su]
+
+    def stress(self, e):
+        if e < 0:  # Compression
+            if e > -self.e_y:
+                self.state = 'Yellow'
+                return self.Es * e
+            elif e > -self.e_sh:
+                self.state = 'Pink'
+                return -self.fy
+            elif e > -self.e_su:
+                self.state = 'Red'
+                return -(self.fsu - (self.fsu - self.fy) * ((self.e_su + e) / (self.e_su - self.e_sh)) ** self.P)
+            else:
+                self.state = 'Black'
+                self.fail = f'Steel Fracture\nMax Strain = {abs(round(self.e_su, 5))}\n'
+                return 0
+        else:  # Tension
+            if e < self.e_y:
+                self.state = 'Yellow'
+                return self.Es * e
+            elif e < self.e_sh:
+                self.state = 'Pink'
+                return self.fy
+            elif e < self.e_su:
+                self.state = 'Red'
+                return self.fsu - (self.fsu - self.fy) * ((self.e_su - e) / (self.e_su - self.e_sh)) ** self.P
+            else:
+                self.state = 'Black'
+                self.fail = f'Steel Fracture\n Max Strain = {abs(round(self.e_su, 5))}'
+                return 0
