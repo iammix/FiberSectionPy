@@ -3,6 +3,9 @@ import numpy as np
 import sys
 import utilities
 
+def conf_pressure_circle(fyh, bar_number, d, s):
+    bar = Stand
+
 
 class ReinforcementProperties:
     def __init__(self, points, bar_diameter, mat_id):
