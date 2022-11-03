@@ -3,8 +3,33 @@ import numpy as np
 import sys
 import utilities
 
+
 def conf_pressure_circle(fyh, bar_number, d, s):
-    bar = Stand
+    bar = utilities.Bar(d)
+    ke = (1 - s / (2 * d)) ** 2
+    fple = ke * 2 * bar.area * fyh / (d * s)
+    return fple
+
+
+def conf_pressure_rect(fyh, d, s, b, w, nx, ny):
+    # TODO Check the equations for the rectangular section
+    # labels: review
+    # assignees: iammix
+
+
+    s_prime = 1
+    bar = utilities.Bar(d)
+    hx = b
+    hy = w
+    a_shx = bar.area * nx
+    a_shy = bar.area * ny
+    sum_w_sqr = 2 * (nx - 1) * (hx / (nx - 1) - bar.d) ** 2 + 2 * (ny - 1) * (hy / (ny - 1) - bar.d) ** 2
+
+    ke = (1 - (sum_w_sqr / (6 * hx * hy))) * (1 - s_prime / (2 * hx)) * (1 - s / (2 * hy))
+    fpl_x = a_shx * fyh / (hy * s)
+    fpl_y = a_shy * fyh / (hx * s)
+    fple = ke * max(math.sqrt(fpl_x * fpl_y), 0.25 * max(fpl_x, fpl_y))
+    return fple
 
 
 class ReinforcementProperties:

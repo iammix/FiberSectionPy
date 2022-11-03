@@ -1,0 +1,14 @@
+name: TODO to issue
+on:
+  push:
+    branch:
+      - main
+      - material
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@v3"
+      - name: "TODO to Issue"
+        uses: "alstr/todo-to-issue-action@v4"
+
