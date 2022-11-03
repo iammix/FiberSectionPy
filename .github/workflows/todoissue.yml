@@ -3,7 +3,7 @@ on:
   push:
     branch:
       - main
-      - material
+      - dev/materials
 jobs:
   build:
     runs-on: "ubuntu-latest"
