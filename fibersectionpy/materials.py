@@ -12,6 +12,8 @@ def conf_pressure_circle(fyh, bar_number, d, s):
 
 
 def conf_pressure_rect(fyh, d, s, b, w, nx, ny):
+    # TODO Check the equations for the rectangular section
+    # assignees: iammix
 
     s_prime = 1
     bar = utilities.Bar(d)
