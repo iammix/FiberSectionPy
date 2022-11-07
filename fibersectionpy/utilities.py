@@ -1,5 +1,6 @@
 import math
 
+
 class Bar:
     def __init__(self, d):
         self.d = d
