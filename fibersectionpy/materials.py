@@ -153,3 +153,48 @@ class SteelBilinMaterial:
 
 class ConfConcMat:
     def __init__(self, kwargs):
+        self.fail = False
+        self.state = 'White'
+        self.fpc = kwargs['fpc']
+        self.fple = kwargs['fple']
+        ratio = 1000
+        if 'Ec' in kwargs:
+            self.Ec = kwargs['Ec']
+        else:
+            self.Ec = math.sqrt(self.fpc * ratio) * 57
+        self.fcr = 4 * math.sqrt(self.fpc * ratio) / ratio
+
+        if 'epcc' in kwargs:
+            self.epcc = kwargs['epcc']
+        else:
+            self.epcc = self.epc0 * (1 + 5 * (-self.fpcc / self.fpc - 1))
+        self.Esec = self.fpcc / self.epcc
+
+        self.r_conf = self.Ec / (self.Ec - self.Esec)
+        self.ecu = -(0.004 + 1.4 * 0.00831 * 68 * 0.09 / 6.899)
+
+        if 'tension' in kwargs:
+            self.tension = kwargs['tension']
+        self.useful_points = [self.ecu, self.epcc, 0, self.fcr, 0.002]
+
+    def stress(self, ec):
+        self.fail = False
+        if ec > 0:
+            # TODO What happens in tension.
+            # assignees: iammix
+            self.state = 'White'
+            return 0
+        else:
+            if ec >= self.ecu:
+                r = self.r_conf
+                x = ec / self.epcc
+                fcc = self.fpcc * x * r/(r-1+x**r)
+                if ec > self.epcc:
+                    self.state = 'Green'
+                else:
+                    self.state = 'Orange'
+                return fcc
+            else:
+                self.state = 'Black'
+                self.fail = f'Confined Concrete Crushing\n'
+
