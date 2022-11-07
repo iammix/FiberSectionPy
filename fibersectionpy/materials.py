@@ -149,3 +149,7 @@ class SteelBilinMaterial:
                 self.state = 'Black'
                 self.fail = f'Steel Fracture\n Max Strain = {abs(round(self.e_su, 5))}'
                 return 0
+
+
+class ConfConcMat:
+    def __init__(self, kwargs):

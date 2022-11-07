@@ -37,4 +37,21 @@ class FiberModel:
         if shape == 'circle':
             return conf_pressure_circle(kwargs['fyh'], kwargs['bar'], kwargs['s'], kwargs['D'])
         elif shape == 'rect':
-            return conf_pressure_rect(kwargs['fyh'], kwargs['bar'])
+            return conf_pressure_rect(kwargs['fyh'], kwargs['bar'], kwargs['s'], kwargs['b'], kwargs['w'], kwargs['nx'],
+                                      kwargs['ny'])
+        else:
+            raise ValueError(
+                "Calculation for confining concrete can be applied only on rectangular and circular secitons")
+
+    @staticmethod
+    def color_from_state(state):
+        colors = ["Gray", "Purple", "Pink", "Blue", "Black", "Green", "Yellow", "Red", "White"]
+        if type(state) == int:
+            return colors[state]
+        else:
+            return state
+
+    def add_material(self, mat_num, mat, **kwargs):
+        if mat == 'concrete':
+            if 'fple' in kwargs:
+                self.materials[mat_num] = Conf
